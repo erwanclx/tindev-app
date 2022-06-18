@@ -5,6 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tindev/main.dart';
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:tindev/PersonDetail.dart';
+import 'package:tindev/PersonImg.dart';
+
+import 'login.dart';
 
 class DetailPageAll extends StatelessWidget {
   final DocumentSnapshot post;
@@ -24,6 +27,7 @@ class DetailPageAll extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.background,
         title: Row(
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center, // Centers horizontally
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -57,7 +61,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
-
+  final CardController controller = CardController();
   Future getPosts() async {
     var firestore = FirebaseFirestore.instance;
     QuerySnapshot qn = await firestore.collection('Personnes').where('region', isEqualTo: widget.post["region"]).get();
@@ -65,7 +69,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
   }
 
   navigateToDetail(DocumentSnapshot post){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => PersonDetailAll(post: post,)));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => PersonImgAll(post: post,)));
   }
 
   @override
@@ -155,7 +159,9 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.triggerLeft();
+                    },
                     child: Icon(Icons.close, color: Colors.red, size: 40,),
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
@@ -164,7 +170,14 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      // const SnackBar(
+                      //   backgroundColor: Colors.green,
+                      //   content: Text("J'aime"),
+                      //   duration: Duration(milliseconds: 200));
+                      controller.triggerRight();
+                      // Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                    },
                     child: Icon(Icons.favorite, color: Colors.green, size: 40,),
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
@@ -177,7 +190,8 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
                               ]), elevation: 10.0,
               );
               },
-    swipeCompleteCallback:
+              cardController: controller,
+              swipeCompleteCallback:
     (CardSwipeOrientation orientation, int index) {
     if (orientation == CardSwipeOrientation.LEFT) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -188,6 +202,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin{
     ),
     );
     } else if (orientation == CardSwipeOrientation.RIGHT) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
     ScaffoldMessenger.of(context).showSnackBar(
     const SnackBar(
     backgroundColor: Colors.green,

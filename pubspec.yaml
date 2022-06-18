@@ -40,6 +40,10 @@ dependencies:
   firebase_auth: ^3.3.19
   swipe_cards: ^1.0.0
   flutter_tindercard: ^0.2.0
+  carousel_slider: ^4.1.1
+  loading_gifs: ^0.3.0
+  loading: ^1.0.2
+  email_validator: ^2.0.1
 
 dev_dependencies:
   flutter_test:
